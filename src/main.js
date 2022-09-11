@@ -7,12 +7,6 @@ import { promises as fs } from "fs";
 import path from "path";
 import url from "url";
 import { systemPreferences, app, Menu, ipcRenderer, ipcMain, shell, globalShortcut, desktopCapturer, screen } from "electron";
-import {
-  hasScreenCapturePermission,
-  hasPromptedForPermission,
-  resetPermissions,
-  openSystemPreferences
-} from 'mac-screen-capture-permissions';
 
 import appMenuTemplate from "./menu/app_menu_template";
 import editMenuTemplate from "./menu/edit_menu_template";
@@ -142,9 +136,6 @@ app.on("ready", async () => {
 
   backgroundShortcuts();
   global.mainWindow = mainWindow;
-
-  console.log(systemPreferences.getMediaAccessStatus('screen'));
-  systemPreferences.askForMediaAccess('screen')
 
 // true
 });
