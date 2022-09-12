@@ -3,18 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <title>snipping-wand</title>
-
-    <style>
-
-      #output-img{
-        max-width:100%;
-      }
-    </style>
+    <link rel="stylesheet" href="assets/stylesheets/main_window.css">
   </head>
   <body>
     <div id="app" class="container" style="display: none;">
       <h1 id="greet"></h1>
-      <button id="test">Test</button>
       <p>
         Welcome to
         <a href="https://www.electronjs.org/" class="electron-website-link">
@@ -25,9 +18,8 @@
       <p>App author: <strong id="author"></strong></p>
       <p>Environment: <strong id="env"></strong></p>
       <p>Electron version: <strong id="electron-version"></strong></p>
-      <img src="screenshot.png" id="output-img" />
     </div>
 
-    <script src="app.js"></script>
+    <script src="assets/javascripts/main_window.js"></script>
   </body>
 </html>
