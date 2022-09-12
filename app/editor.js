@@ -656,9 +656,9 @@ module.exports = JSON.parse('{"name":"development","description":"Add here any e
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/*!********************!*\
-  !*** ./src/app.js ***!
-  \********************/
+/*!***********************!*\
+  !*** ./src/editor.js ***!
+  \***********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _stylesheets_main_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./stylesheets/main.css */ "./src/stylesheets/main.css");
 /* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! electron */ "electron");
@@ -674,40 +674,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 document.querySelector("#app").style.display = "block";
-document.querySelector("#greet").innerHTML = (0,_hello_world_hello_world__WEBPACK_IMPORTED_MODULE_3__.greet)();
-document.querySelector("#env").innerHTML = env__WEBPACK_IMPORTED_MODULE_4__.name;
-document.querySelector("#electron-version").innerHTML = process.versions.electron;
-const osMap = {
-  win32: "Windows",
-  darwin: "macOS",
-  linux: "Linux"
-};
-document.querySelector("#os").innerHTML = osMap[process.platform]; // We can communicate with main process through messages.
-
-electron__WEBPACK_IMPORTED_MODULE_1__.ipcRenderer.on("app-path", (event, appDirPath) => {
-  // Holy crap! This is browser window with HTML and stuff, but I can read
-  // files from disk like it's node.js! Welcome to Electron world :)
-  const appDir = fs_jetpack__WEBPACK_IMPORTED_MODULE_2___default().cwd(appDirPath);
-  const manifest = appDir.read("package.json", "json");
-  document.querySelector("#author").innerHTML = manifest.author;
-});
-electron__WEBPACK_IMPORTED_MODULE_1__.ipcRenderer.send("need-app-path");
-document.querySelector(".electron-website-link").addEventListener("click", event => {
-  electron__WEBPACK_IMPORTED_MODULE_1__.ipcRenderer.send("open-external-link", event.target.href);
-  event.preventDefault();
-}, false); //   ipcRenderer.on('sync', function (evt, data) {
-//     console.log(data); // prints "foo"
-//     document.querySelector("#output-img").src = data;
-// });
-
-document.querySelector("#test").addEventListener("click", async event => {
-  const data = await electron__WEBPACK_IMPORTED_MODULE_1__.ipcRenderer.invoke('test-action', [1, 2, 3]);
+electron__WEBPACK_IMPORTED_MODULE_1__.ipcRenderer.on('sync', function (evt, data) {
   console.log(data); // prints "foo"
 
   document.querySelector("#output-img").src = data;
-}, false);
+});
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=app.js.map
+//# sourceMappingURL=editor.js.map

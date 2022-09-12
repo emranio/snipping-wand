@@ -39,10 +39,10 @@ document.querySelector(".electron-website-link").addEventListener(
   false
   );
 
-  ipcRenderer.on('sync', function (evt, data) {
-    console.log(data); // prints "foo"
-    document.querySelector("#output-img").src = data;
-});
+//   ipcRenderer.on('sync', function (evt, data) {
+//     console.log(data); // prints "foo"
+//     document.querySelector("#output-img").src = data;
+// });
 
 
 document.querySelector("#test").addEventListener(

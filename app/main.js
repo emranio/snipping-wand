@@ -376,8 +376,8 @@ const takeshot = async display_id => {
   const sources = await electron__WEBPACK_IMPORTED_MODULE_3__.desktopCapturer.getSources({
     types: ['screen'],
     thumbnailSize: {
-      height: 768,
-      width: 1366
+      // height: 768,
+      width: 1400
     }
   });
 
@@ -418,20 +418,21 @@ const initIpc = () => {
   });
 };
 
-const triggerScreenshot = async editorWindow => {
-  fullscreenShortcuts(editorWindow);
+const triggerScreenshot = async () => {
+  fullscreenShortcuts();
   let point = electron__WEBPACK_IMPORTED_MODULE_3__.screen.getCursorScreenPoint();
   let display = electron__WEBPACK_IMPORTED_MODULE_3__.screen.getDisplayNearestPoint(point);
   const content = await takeshot(display.id); // console.log({event, arg});
   // mainWindow.setBackgroundColor('#aaa');
 
   console.log(editorWindow.isFullScreen());
-  editorWindow.setKiosk(false);
+  editorWindow.show();
+  editorWindow.setFullScreen(true);
   editorWindow.setKiosk(true);
   return content;
 };
 
-const fullscreenShortcuts = editorWindow => {
+const fullscreenShortcuts = () => {
   electron__WEBPACK_IMPORTED_MODULE_3__.globalShortcut.register('Escape', function () {
     console.log('Escape is pressed'); // editorWindow.setFullScreen(false);
     // editorWindow.setKiosk(false);
@@ -444,6 +445,11 @@ const fullscreenShortcuts = editorWindow => {
 const backgroundShortcuts = () => {
   electron__WEBPACK_IMPORTED_MODULE_3__.globalShortcut.register('Alt+Control+Space', async () => {
     console.log('Alt+CommandOrControl+I is pressed');
+
+    if (global.editorWindow) {
+      global.editorWindow.close();
+    }
+
     const editorWindow = (0,_helpers_window__WEBPACK_IMPORTED_MODULE_7__["default"])("main", {
       width: 1000,
       height: 600,
@@ -453,16 +459,22 @@ const backgroundShortcuts = () => {
         // in your production app.
         nodeIntegration: true,
         contextIsolation: false,
+        transparent: true,
         // Spectron needs access to remote module
         enableRemoteModule: env__WEBPACK_IMPORTED_MODULE_8__.name === "test"
       }
     });
     editorWindow.loadURL(url__WEBPACK_IMPORTED_MODULE_2___default().format({
-      pathname: path__WEBPACK_IMPORTED_MODULE_1___default().join(__dirname, "app.html"),
+      pathname: path__WEBPACK_IMPORTED_MODULE_1___default().join(__dirname, "editor.html"),
       protocol: "file:",
       slashes: true
     }));
-    let getScreenShotUrl = await triggerScreenshot(editorWindow); // event.reply('communicate-test', getScreenShotUrl);
+    global.editorWindow = editorWindow;
+    let getScreenShotUrl = await triggerScreenshot(); // event.reply('communicate-test', getScreenShotUrl);
+
+    if (env__WEBPACK_IMPORTED_MODULE_8__.name === "development") {
+      editorWindow.openDevTools();
+    }
 
     editorWindow.webContents.send('sync', getScreenShotUrl);
   });

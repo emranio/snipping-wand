@@ -4,15 +4,16 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  display: block;
 }
 
-body {
+/* body {
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: sans-serif;
   color: #525252;
-}
+} */
 
 a {
   text-decoration: none;
@@ -21,4 +22,9 @@ a {
 
 .container {
   text-align: center;
+}
+
+#output-img{
+  width: 100%;
+  height: auto;
 }

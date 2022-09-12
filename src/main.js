@@ -41,7 +41,7 @@ const takeshot = async (display_id) => {
     content = source.thumbnail.toDataURL();
     break;
     // console.log(source);
-    
+
     // await fs.writeFile(`app/screenshot.png`, content, 'binary');
   }
   return content;
@@ -72,8 +72,8 @@ const initIpc = () => {
 
 };
 
-const triggerScreenshot = async (editorWindow) =>{
-  fullscreenShortcuts(editorWindow);
+const triggerScreenshot = async () => {
+  fullscreenShortcuts();
 
   let point = screen.getCursorScreenPoint();
   let display = screen.getDisplayNearestPoint(point);
@@ -82,13 +82,14 @@ const triggerScreenshot = async (editorWindow) =>{
   // console.log({event, arg});
   // mainWindow.setBackgroundColor('#aaa');
   console.log(editorWindow.isFullScreen());
-  editorWindow.setKiosk(false);
+  editorWindow.show();
+  editorWindow.setFullScreen(true);
   editorWindow.setKiosk(true);
 
   return content;
 }
 
-const fullscreenShortcuts = (editorWindow) => {
+const fullscreenShortcuts = () => {
   globalShortcut.register('Escape', function () {
     console.log('Escape is pressed');
     // editorWindow.setFullScreen(false);
@@ -101,34 +102,47 @@ const fullscreenShortcuts = (editorWindow) => {
 const backgroundShortcuts = () => {
   globalShortcut.register('Alt+Control+Space', async () => {
     console.log('Alt+CommandOrControl+I is pressed');
-
-
-  const editorWindow = createWindow("main", {
-    width: 1000,
-    height: 600,
-    webPreferences: {
-      // Two properties below are here for demo purposes, and are
-      // security hazard. Make sure you know what you're doing
-      // in your production app.
-      nodeIntegration: true,
-      contextIsolation: false,
-      // Spectron needs access to remote module
-      enableRemoteModule: env.name === "test"
+    if(global.editorWindow ){
+      global.editorWindow.close();
     }
-  });
-
-  editorWindow.loadURL(
-    url.format({
-      pathname: path.join(__dirname, "app.html"),
-      protocol: "file:",
-      slashes: true
-    })
-  );
 
 
-      let getScreenShotUrl = await triggerScreenshot(editorWindow);
-      // event.reply('communicate-test', getScreenShotUrl);
-      editorWindow.webContents.send('sync', getScreenShotUrl);
+    const editorWindow = createWindow("main", {
+      width: 1000,
+      height: 600,
+      webPreferences: {
+        // Two properties below are here for demo purposes, and are
+        // security hazard. Make sure you know what you're doing
+        // in your production app.
+        nodeIntegration: true,
+        contextIsolation: false,
+        transparent: true,
+        // Spectron needs access to remote module
+        enableRemoteModule: env.name === "test"
+      }
+    });
+
+    editorWindow.loadURL(
+      url.format({
+        pathname: path.join(__dirname, "editor.html"),
+        protocol: "file:",
+        slashes: true
+      })
+    );
+
+
+
+
+    global.editorWindow = editorWindow;
+
+    let getScreenShotUrl = await triggerScreenshot();
+    // event.reply('communicate-test', getScreenShotUrl);
+
+
+    if (env.name === "development") {
+      editorWindow.openDevTools();
+    }  
+    editorWindow.webContents.send('sync', getScreenShotUrl);
 
   });
 }
@@ -168,7 +182,7 @@ app.on("ready", async () => {
   backgroundShortcuts();
   global.mainWindow = mainWindow;
 
-// true
+  // true
 });
 
 app.on("window-all-closed", () => {

@@ -6,6 +6,7 @@ module.exports = env => {
   return merge(base(env), {
     entry: {
       main: "./src/main.js",
+      editor: "./src/editor.js",
       app: "./src/app.js"
     },
     output: {
