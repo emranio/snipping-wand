@@ -371,24 +371,24 @@ if (env__WEBPACK_IMPORTED_MODULE_8__.name !== "production") {
   electron__WEBPACK_IMPORTED_MODULE_3__.app.setPath("userData", `${userDataPath} (${env__WEBPACK_IMPORTED_MODULE_8__.name})`);
 }
 
-const takeshot = async display_id => {
+const takeshot = async display => {
   var content = null;
   const sources = await electron__WEBPACK_IMPORTED_MODULE_3__.desktopCapturer.getSources({
     types: ['screen'],
     thumbnailSize: {
-      // height: 768,
-      width: 1400
+      height: display.size.height,
+      width: display.size.width
     }
   });
 
   for await (let source of sources) {
-    if (+source.display_id !== display_id) {
+    if (+source.display_id !== display.id) {
       continue;
     }
 
-    content = source.thumbnail.toDataURL();
-    break; // console.log(source);
-    // await fs.writeFile(`app/screenshot.png`, content, 'binary');
+    content = source.thumbnail.toDataURL(); // console.log(source);
+
+    break; // await fs.writeFile(`app/screenshot.png`, content, 'binary');
   }
 
   return content;
@@ -422,7 +422,7 @@ const triggerScreenshot = async () => {
   fullscreenShortcuts();
   let point = electron__WEBPACK_IMPORTED_MODULE_3__.screen.getCursorScreenPoint();
   let display = electron__WEBPACK_IMPORTED_MODULE_3__.screen.getDisplayNearestPoint(point);
-  const content = await takeshot(display.id); // console.log({event, arg});
+  const content = await takeshot(display); // console.log({event, arg});
   // mainWindow.setBackgroundColor('#aaa');
 
   console.log(editorWindow.isFullScreen());
@@ -446,9 +446,11 @@ const backgroundShortcuts = () => {
   electron__WEBPACK_IMPORTED_MODULE_3__.globalShortcut.register('Alt+Control+Space', async () => {
     console.log('Alt+CommandOrControl+I is pressed');
 
-    if (global.editorWindow) {
-      global.editorWindow.close();
-    }
+    try {
+      if (typeof global.editorWindow !== 'undefined') {
+        global.editorWindow.close();
+      }
+    } catch (error) {}
 
     const editorWindow = (0,_helpers_window__WEBPACK_IMPORTED_MODULE_7__["default"])("main", {
       width: 1000,

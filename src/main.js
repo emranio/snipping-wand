@@ -25,22 +25,22 @@ if (env.name !== "production") {
   app.setPath("userData", `${userDataPath} (${env.name})`);
 }
 
-const takeshot = async (display_id) => {
+const takeshot = async (display) => {
   var content = null;
   const sources = await desktopCapturer.getSources({
     types: ['screen'], thumbnailSize: {
-      height: 768,
-      width: 1366
+      height: display.size.height,
+      width: display.size.width
     }
   });
 
   for await (let source of sources) {
-    if (+source.display_id !== display_id) {
+    if (+source.display_id !== display.id) {
       continue;
     }
     content = source.thumbnail.toDataURL();
-    break;
     // console.log(source);
+    break;
 
     // await fs.writeFile(`app/screenshot.png`, content, 'binary');
   }
@@ -78,7 +78,7 @@ const triggerScreenshot = async () => {
   let point = screen.getCursorScreenPoint();
   let display = screen.getDisplayNearestPoint(point);
 
-  const content = await takeshot(display.id);
+  const content = await takeshot(display);
   // console.log({event, arg});
   // mainWindow.setBackgroundColor('#aaa');
   console.log(editorWindow.isFullScreen());
@@ -102,8 +102,12 @@ const fullscreenShortcuts = () => {
 const backgroundShortcuts = () => {
   globalShortcut.register('Alt+Control+Space', async () => {
     console.log('Alt+CommandOrControl+I is pressed');
-    if(global.editorWindow ){
-      global.editorWindow.close();
+    try {
+      if(typeof global.editorWindow !== 'undefined'){
+        global.editorWindow.close();
+      }
+    } catch (error) {
+      
     }
 
 
