@@ -41,7 +41,7 @@ document.querySelector(".electron-website-link").addEventListener(
 
   ipcRenderer.on('sync', function (evt, data) {
     console.log(data); // prints "foo"
-    document.querySelector("#output-img").src = data + '?t=' + Math.random();
+    document.querySelector("#output-img").src = data;
 });
 
 

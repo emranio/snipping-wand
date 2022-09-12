@@ -26,6 +26,7 @@ if (env.name !== "production") {
 }
 
 const takeshot = async (display_id) => {
+  var content = null;
   const sources = await desktopCapturer.getSources({
     types: ['screen'], thumbnailSize: {
       height: 768,
@@ -37,11 +38,13 @@ const takeshot = async (display_id) => {
     if (+source.display_id !== display_id) {
       continue;
     }
-    const content = source.thumbnail.toPNG()
-    console.log(source);
-
-    await fs.writeFile(`app/screenshot.png`, content, 'binary');
+    content = source.thumbnail.toDataURL();
+    break;
+    // console.log(source);
+    
+    // await fs.writeFile(`app/screenshot.png`, content, 'binary');
   }
+  return content;
 }
 
 const setApplicationMenu = () => {
@@ -69,26 +72,28 @@ const initIpc = () => {
 
 };
 
-const triggerScreenshot = async () =>{
-  fullscreenShortcuts();
+const triggerScreenshot = async (editorWindow) =>{
+  fullscreenShortcuts(editorWindow);
 
   let point = screen.getCursorScreenPoint();
   let display = screen.getDisplayNearestPoint(point);
 
-  await takeshot(display.id);
+  const content = await takeshot(display.id);
   // console.log({event, arg});
   // mainWindow.setBackgroundColor('#aaa');
-  // mainWindow.setFullScreen(true);
-  // mainWindow.setKiosk(true);
+  console.log(editorWindow.isFullScreen());
+  editorWindow.setKiosk(false);
+  editorWindow.setKiosk(true);
 
-  return "screenshot.png";
+  return content;
 }
 
-const fullscreenShortcuts = () => {
+const fullscreenShortcuts = (editorWindow) => {
   globalShortcut.register('Escape', function () {
     console.log('Escape is pressed');
-    mainWindow.setFullScreen(false);
-    mainWindow.setKiosk(false);
+    // editorWindow.setFullScreen(false);
+    // editorWindow.setKiosk(false);
+    editorWindow.close();
     globalShortcut.unregister('Escape');
   });
 }
@@ -97,9 +102,33 @@ const backgroundShortcuts = () => {
   globalShortcut.register('Alt+Control+Space', async () => {
     console.log('Alt+CommandOrControl+I is pressed');
 
-      let getScreenShotUrl = await triggerScreenshot();
+
+  const editorWindow = createWindow("main", {
+    width: 1000,
+    height: 600,
+    webPreferences: {
+      // Two properties below are here for demo purposes, and are
+      // security hazard. Make sure you know what you're doing
+      // in your production app.
+      nodeIntegration: true,
+      contextIsolation: false,
+      // Spectron needs access to remote module
+      enableRemoteModule: env.name === "test"
+    }
+  });
+
+  editorWindow.loadURL(
+    url.format({
+      pathname: path.join(__dirname, "app.html"),
+      protocol: "file:",
+      slashes: true
+    })
+  );
+
+
+      let getScreenShotUrl = await triggerScreenshot(editorWindow);
       // event.reply('communicate-test', getScreenShotUrl);
-      mainWindow.webContents.send('sync', getScreenShotUrl);
+      editorWindow.webContents.send('sync', getScreenShotUrl);
 
   });
 }
@@ -121,6 +150,8 @@ app.on("ready", async () => {
       enableRemoteModule: env.name === "test"
     }
   });
+
+  mainWindow.hide();
 
   mainWindow.loadURL(
     url.format({

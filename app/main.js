@@ -220,16 +220,6 @@ module.exports = require("fs-jetpack");
 
 /***/ }),
 
-/***/ "mac-screen-capture-permissions":
-/*!*************************************************!*\
-  !*** external "mac-screen-capture-permissions" ***!
-  \*************************************************/
-/***/ ((module) => {
-
-module.exports = require("mac-screen-capture-permissions");
-
-/***/ }),
-
 /***/ "fs":
 /*!*********************!*\
   !*** external "fs" ***!
@@ -353,18 +343,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var url__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(url__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! electron */ "electron");
 /* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var mac_screen_capture_permissions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! mac-screen-capture-permissions */ "mac-screen-capture-permissions");
-/* harmony import */ var mac_screen_capture_permissions__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(mac_screen_capture_permissions__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _menu_app_menu_template__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./menu/app_menu_template */ "./src/menu/app_menu_template.js");
-/* harmony import */ var _menu_edit_menu_template__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./menu/edit_menu_template */ "./src/menu/edit_menu_template.js");
-/* harmony import */ var _menu_dev_menu_template__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./menu/dev_menu_template */ "./src/menu/dev_menu_template.js");
-/* harmony import */ var _helpers_window__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./helpers/window */ "./src/helpers/window.js");
-/* harmony import */ var env__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! env */ "./config/env_development.json");
+/* harmony import */ var _menu_app_menu_template__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./menu/app_menu_template */ "./src/menu/app_menu_template.js");
+/* harmony import */ var _menu_edit_menu_template__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./menu/edit_menu_template */ "./src/menu/edit_menu_template.js");
+/* harmony import */ var _menu_dev_menu_template__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./menu/dev_menu_template */ "./src/menu/dev_menu_template.js");
+/* harmony import */ var _helpers_window__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./helpers/window */ "./src/helpers/window.js");
+/* harmony import */ var env__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! env */ "./config/env_development.json");
 // This is main process of Electron, started as first thing when your
 // app starts. It runs through entire life of your application.
 // It doesn't have any windows which you can see on screen, but we can open
 // window from here.
-
 
 
 
@@ -379,12 +366,13 @@ __webpack_require__.r(__webpack_exports__);
 // Thanks to this you can use production and development versions of the app
 // on same machine like those are two separate apps.
 
-if (env__WEBPACK_IMPORTED_MODULE_9__.name !== "production") {
+if (env__WEBPACK_IMPORTED_MODULE_8__.name !== "production") {
   const userDataPath = electron__WEBPACK_IMPORTED_MODULE_3__.app.getPath("userData");
-  electron__WEBPACK_IMPORTED_MODULE_3__.app.setPath("userData", `${userDataPath} (${env__WEBPACK_IMPORTED_MODULE_9__.name})`);
+  electron__WEBPACK_IMPORTED_MODULE_3__.app.setPath("userData", `${userDataPath} (${env__WEBPACK_IMPORTED_MODULE_8__.name})`);
 }
 
 const takeshot = async display_id => {
+  var content = null;
   const sources = await electron__WEBPACK_IMPORTED_MODULE_3__.desktopCapturer.getSources({
     types: ['screen'],
     thumbnailSize: {
@@ -398,17 +386,19 @@ const takeshot = async display_id => {
       continue;
     }
 
-    const content = source.thumbnail.toPNG();
-    console.log(source);
-    await fs__WEBPACK_IMPORTED_MODULE_0__.promises.writeFile(`app/screenshot.png`, content, 'binary');
+    content = source.thumbnail.toDataURL();
+    break; // console.log(source);
+    // await fs.writeFile(`app/screenshot.png`, content, 'binary');
   }
+
+  return content;
 };
 
 const setApplicationMenu = () => {
-  const menus = [_menu_app_menu_template__WEBPACK_IMPORTED_MODULE_5__["default"], _menu_edit_menu_template__WEBPACK_IMPORTED_MODULE_6__["default"]];
+  const menus = [_menu_app_menu_template__WEBPACK_IMPORTED_MODULE_4__["default"], _menu_edit_menu_template__WEBPACK_IMPORTED_MODULE_5__["default"]];
 
-  if (env__WEBPACK_IMPORTED_MODULE_9__.name !== "production") {
-    menus.push(_menu_dev_menu_template__WEBPACK_IMPORTED_MODULE_7__["default"]);
+  if (env__WEBPACK_IMPORTED_MODULE_8__.name !== "production") {
+    menus.push(_menu_dev_menu_template__WEBPACK_IMPORTED_MODULE_6__["default"]);
   }
 
   electron__WEBPACK_IMPORTED_MODULE_3__.Menu.setApplicationMenu(electron__WEBPACK_IMPORTED_MODULE_3__.Menu.buildFromTemplate(menus));
@@ -428,23 +418,25 @@ const initIpc = () => {
   });
 };
 
-const triggerScreenshot = async () => {
-  fullscreenShortcuts();
+const triggerScreenshot = async editorWindow => {
+  fullscreenShortcuts(editorWindow);
   let point = electron__WEBPACK_IMPORTED_MODULE_3__.screen.getCursorScreenPoint();
   let display = electron__WEBPACK_IMPORTED_MODULE_3__.screen.getDisplayNearestPoint(point);
-  await takeshot(display.id); // console.log({event, arg});
+  const content = await takeshot(display.id); // console.log({event, arg});
   // mainWindow.setBackgroundColor('#aaa');
-  // mainWindow.setFullScreen(true);
-  // mainWindow.setKiosk(true);
 
-  return "screenshot.png";
+  console.log(editorWindow.isFullScreen());
+  editorWindow.setKiosk(false);
+  editorWindow.setKiosk(true);
+  return content;
 };
 
-const fullscreenShortcuts = () => {
+const fullscreenShortcuts = editorWindow => {
   electron__WEBPACK_IMPORTED_MODULE_3__.globalShortcut.register('Escape', function () {
-    console.log('Escape is pressed');
-    mainWindow.setFullScreen(false);
-    mainWindow.setKiosk(false);
+    console.log('Escape is pressed'); // editorWindow.setFullScreen(false);
+    // editorWindow.setKiosk(false);
+
+    editorWindow.close();
     electron__WEBPACK_IMPORTED_MODULE_3__.globalShortcut.unregister('Escape');
   });
 };
@@ -452,16 +444,34 @@ const fullscreenShortcuts = () => {
 const backgroundShortcuts = () => {
   electron__WEBPACK_IMPORTED_MODULE_3__.globalShortcut.register('Alt+Control+Space', async () => {
     console.log('Alt+CommandOrControl+I is pressed');
-    let getScreenShotUrl = await triggerScreenshot(); // event.reply('communicate-test', getScreenShotUrl);
+    const editorWindow = (0,_helpers_window__WEBPACK_IMPORTED_MODULE_7__["default"])("main", {
+      width: 1000,
+      height: 600,
+      webPreferences: {
+        // Two properties below are here for demo purposes, and are
+        // security hazard. Make sure you know what you're doing
+        // in your production app.
+        nodeIntegration: true,
+        contextIsolation: false,
+        // Spectron needs access to remote module
+        enableRemoteModule: env__WEBPACK_IMPORTED_MODULE_8__.name === "test"
+      }
+    });
+    editorWindow.loadURL(url__WEBPACK_IMPORTED_MODULE_2___default().format({
+      pathname: path__WEBPACK_IMPORTED_MODULE_1___default().join(__dirname, "app.html"),
+      protocol: "file:",
+      slashes: true
+    }));
+    let getScreenShotUrl = await triggerScreenshot(editorWindow); // event.reply('communicate-test', getScreenShotUrl);
 
-    mainWindow.webContents.send('sync', getScreenShotUrl);
+    editorWindow.webContents.send('sync', getScreenShotUrl);
   });
 };
 
 electron__WEBPACK_IMPORTED_MODULE_3__.app.on("ready", async () => {
   setApplicationMenu();
   initIpc();
-  const mainWindow = (0,_helpers_window__WEBPACK_IMPORTED_MODULE_8__["default"])("main", {
+  const mainWindow = (0,_helpers_window__WEBPACK_IMPORTED_MODULE_7__["default"])("main", {
     width: 1000,
     height: 600,
     webPreferences: {
@@ -471,23 +481,22 @@ electron__WEBPACK_IMPORTED_MODULE_3__.app.on("ready", async () => {
       nodeIntegration: true,
       contextIsolation: false,
       // Spectron needs access to remote module
-      enableRemoteModule: env__WEBPACK_IMPORTED_MODULE_9__.name === "test"
+      enableRemoteModule: env__WEBPACK_IMPORTED_MODULE_8__.name === "test"
     }
   });
+  mainWindow.hide();
   mainWindow.loadURL(url__WEBPACK_IMPORTED_MODULE_2___default().format({
     pathname: path__WEBPACK_IMPORTED_MODULE_1___default().join(__dirname, "app.html"),
     protocol: "file:",
     slashes: true
   }));
 
-  if (env__WEBPACK_IMPORTED_MODULE_9__.name === "development") {
+  if (env__WEBPACK_IMPORTED_MODULE_8__.name === "development") {
     mainWindow.openDevTools();
   }
 
   backgroundShortcuts();
-  global.mainWindow = mainWindow;
-  console.log(electron__WEBPACK_IMPORTED_MODULE_3__.systemPreferences.getMediaAccessStatus('screen'));
-  electron__WEBPACK_IMPORTED_MODULE_3__.systemPreferences.askForMediaAccess('screen'); // true
+  global.mainWindow = mainWindow; // true
 });
 electron__WEBPACK_IMPORTED_MODULE_3__.app.on("window-all-closed", () => {
   electron__WEBPACK_IMPORTED_MODULE_3__.app.quit();

@@ -699,7 +699,7 @@ document.querySelector(".electron-website-link").addEventListener("click", event
 electron__WEBPACK_IMPORTED_MODULE_1__.ipcRenderer.on('sync', function (evt, data) {
   console.log(data); // prints "foo"
 
-  document.querySelector("#output-img").src = data + '?t=' + Math.random();
+  document.querySelector("#output-img").src = data;
 });
 document.querySelector("#test").addEventListener("click", async event => {
   const data = await electron__WEBPACK_IMPORTED_MODULE_1__.ipcRenderer.invoke('test-action', [1, 2, 3]);
