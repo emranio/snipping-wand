@@ -1,4 +1,34 @@
+e2e
+
+build-tools
+    webpack....
+    ....
+    ....
+
 dist
+    main
+        index.js
+    renderer
+        assets
+            icon.ico
+            test.png
+            ....
+
+        app-window.js
+        snipping-canvas-window.js
+        app.css
+        ui.css
+        snipping-canvas-window.css
+        app-window.html
+        snipping-canvas-window.html
+
+release
+    *.dmg
+    ....
+
+resources
+    icon.ico
+    test.png
 
 src
     main
@@ -20,12 +50,15 @@ src
                 index.js
             ocr
                 index.js
+            screen-recorder
+                index.js
+            video-transcriber
+                index.js
             image-uploader
                 index.js
             photo-scanner
                 index.js
-            sendto-clipboard-device-qr
-
+            send-to-clipboard-device-qr
 
     renderer
         styles
@@ -46,5 +79,3 @@ src
                 index.js
             index.js
             index.ejs
-
-
