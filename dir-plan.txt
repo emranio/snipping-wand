@@ -1,0 +1,50 @@
+dist
+
+src
+    main
+        app
+            index.js
+            globalShortCuts.js
+        components
+            common
+                a.js
+                b.js
+                index.js
+            menu
+                index.js
+            snipping-canvas
+                index.js
+            screenshot-editor
+                index.js
+            qrcode-barcode-reader
+                index.js
+            ocr
+                index.js
+            image-uploader
+                index.js
+            photo-scanner
+                index.js
+            sendto-clipboard-device-qr
+
+
+    renderer
+        styles
+            app.css
+            ui.css
+            ....
+        common
+            a.js
+            b.js
+            index.js
+        app-window
+            index.js
+            index.ejs
+        snipping-canvas-window
+            components
+                a.js
+                b.js
+                index.js
+            index.js
+            index.ejs
+
+
