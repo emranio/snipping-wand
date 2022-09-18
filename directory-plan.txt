@@ -1,0 +1,81 @@
+e2e
+
+build-tools
+    webpack....
+    ....
+    ....
+
+dist
+    main
+        index.js
+    renderer
+        assets
+            icon.ico
+            test.png
+            ....
+
+        app-window.js
+        snipping-canvas-window.js
+        app.css
+        ui.css
+        snipping-canvas-window.css
+        app-window.html
+        snipping-canvas-window.html
+
+release
+    *.dmg
+    ....
+
+resources
+    icon.ico
+    test.png
+
+src
+    main
+        app
+            index.js
+            globalShortCuts.js
+        components
+            common
+                a.js
+                b.js
+                index.js
+            menu
+                index.js
+            snipping-canvas
+                index.js
+            screenshot-editor
+                index.js
+            qrcode-barcode-reader
+                index.js
+            ocr
+                index.js
+            screen-recorder
+                index.js
+            video-transcriber
+                index.js
+            image-uploader
+                index.js
+            photo-scanner
+                index.js
+            send-to-clipboard-device-qr
+
+    renderer
+        styles
+            app.css
+            ui.css
+            ....
+        common
+            a.js
+            b.js
+            index.js
+        app-window
+            index.js
+            index.ejs
+        snipping-canvas-window
+            components
+                a.js
+                b.js
+                index.js
+            index.js
+            index.ejs
