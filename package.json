@@ -7,7 +7,7 @@
   "author": "emranio <emranio@yahoo.com>",
   "copyright": "© 2022, emranio.",
   "homepage": "http://emran.io/snippingwand",
-  "main": "app/main.js",
+  "main": "dist/main.js",
   "build": {
     "appId": "io.emran.snippingwand",
     "files": [
