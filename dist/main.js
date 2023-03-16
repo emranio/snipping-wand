@@ -103,11 +103,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var path__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(path__WEBPACK_IMPORTED_MODULE_1__);
 
 
+var win;
 
 function createWindow() {
-  const win = new electron__WEBPACK_IMPORTED_MODULE_0__.BrowserWindow({
-    width: 800,
-    height: 600,
+  let primaryDisplay = electron__WEBPACK_IMPORTED_MODULE_0__.screen.getPrimaryDisplay();
+  console.log(electron__WEBPACK_IMPORTED_MODULE_0__.screen.getAllDisplays());
+  win = new electron__WEBPACK_IMPORTED_MODULE_0__.BrowserWindow({
+    width: primaryDisplay.size.width,
+    height: primaryDisplay.size.width,
+    // width: 800,
+    // height: 400,
     skipTaskbar: true,
     transparent: true,
     // fullscreen: true,
@@ -123,12 +128,15 @@ function createWindow() {
   });
   win.loadFile(path__WEBPACK_IMPORTED_MODULE_1___default().join(__dirname, 'index.html')); // win.setBackgroundColor('#aaa');
   // win.setFullScreen(true);
-
-  win.setKiosk(true); // win.setAlwaysOnTop(true, 'screen');
+  // win.setKiosk(true);
+  // win.setTitle('mask')
+  // win.setAlwaysOnTop(true, 'screen');
 
   win.setIgnoreMouseEvents(true, {
     forward: true
-  }); // win.openDevTools();
+  }); //   var monitorWidth = screen.width;
+  // var monitorHeight = screen.height;
+  // win.openDevTools();
 }
 
 electron__WEBPACK_IMPORTED_MODULE_0__.app.whenReady().then(() => {
