@@ -1,6 +1,9 @@
 import { app, BrowserWindow, screen, desktopCapturer } from 'electron'
 import path from 'path'
 var win;
+
+app.commandLine.appendSwitch('disable-features', 'IOSurfaceCapturer,DesktopCaptureMacV2')
+
 function createWindow() {
   let primaryDisplay = screen.getPrimaryDisplay();
   console.log(screen.getAllDisplays());
@@ -8,12 +11,13 @@ function createWindow() {
   win = new BrowserWindow({
     width: primaryDisplay.size.width,
     height: primaryDisplay.size.width,
-    // width: 800,
-    // height: 400,
-    skipTaskbar: true,
-    transparent: true,
+    // width: 200,
+    // height:200,
+    // skipTaskbar: true,
+    // transparent: true,
     // fullscreen: true,
-    // show: false,
+    show: false,
+    // contentProtection: true,
     alwaysOnTop: true,
     frame: false,
     // opacity: 0.5,
@@ -29,21 +33,42 @@ function createWindow() {
   // win.setBackgroundColor('#aaa');
   // win.setFullScreen(true);
   // win.setKiosk(true);
-  // win.setTitle('mask')
-  // win.setAlwaysOnTop(true, 'screen');
-  win.setIgnoreMouseEvents(true, { forward: true });
+  win.setIgnoreMouseEvents(true, { forward: false });
+  win.setContentProtection(true);
 
-  //   var monitorWidth = screen.width;
+  // var monitorWidth = screen.width;
   // var monitorHeight = screen.height;
 
 
   // win.openDevTools();
 
+  desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
+    for (const source of sources) {
+      console.log(source)
+      if (source.name === 'Entire screen') {
+        win.webContents.send('SET_SOURCE', source.id)
+        return
+      }
+    }
+  })
 
+  win.show(true);
 }
 
 app.whenReady().then(() => {
   createWindow()
+
+  // setTimeout(() => {
+  //   desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
+  //     for (const source of sources) {
+  //       console.log(source)
+  //       if (source.name === 'Entire screen') {
+  //         win.webContents.send('SET_SOURCE', source.id)
+  //         return
+  //       }
+  //     }
+  //   })  
+  // }, 2000)
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
