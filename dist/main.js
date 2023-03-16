@@ -108,12 +108,27 @@ function createWindow() {
   const win = new electron__WEBPACK_IMPORTED_MODULE_0__.BrowserWindow({
     width: 800,
     height: 600,
+    skipTaskbar: true,
+    transparent: true,
+    // fullscreen: true,
+    // show: false,
+    alwaysOnTop: true,
+    frame: false,
+    // opacity: 0.5,
+    focusable: true,
+    acceptFirstMouse: true,
     webPreferences: {
       preload: path__WEBPACK_IMPORTED_MODULE_1___default().join(__dirname, 'preload.js')
     }
   });
-  win.loadFile(path__WEBPACK_IMPORTED_MODULE_1___default().join(__dirname, 'index.html'));
-  win.openDevTools();
+  win.loadFile(path__WEBPACK_IMPORTED_MODULE_1___default().join(__dirname, 'index.html')); // win.setBackgroundColor('#aaa');
+  // win.setFullScreen(true);
+
+  win.setKiosk(true); // win.setAlwaysOnTop(true, 'screen');
+
+  win.setIgnoreMouseEvents(true, {
+    forward: true
+  }); // win.openDevTools();
 }
 
 electron__WEBPACK_IMPORTED_MODULE_0__.app.whenReady().then(() => {
