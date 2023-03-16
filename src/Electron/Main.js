@@ -13,15 +13,15 @@ function createWindow() {
     height: primaryDisplay.size.width,
     // width: 200,
     // height:200,
-    // skipTaskbar: true,
+    skipTaskbar: true,
     // transparent: true,
     // fullscreen: true,
-    show: false,
+    // show: false,
     // contentProtection: true,
     alwaysOnTop: true,
     frame: false,
     // opacity: 0.5,
-    focusable: true,
+    focusable: false,
     acceptFirstMouse: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
@@ -29,6 +29,12 @@ function createWindow() {
   })
 
   win.loadFile(path.join(__dirname, 'index.html'))
+  // Tricky way to bring cam bubble to top over fullscreen windows on mac
+  win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  win.setAlwaysOnTop(true, "floating");
+  win.setFullScreenable(false);
+  // Below statement completes the flow
+  win.moveTop();
 
   // win.setBackgroundColor('#aaa');
   // win.setFullScreen(true);
