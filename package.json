@@ -48,6 +48,10 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
+    "@mediapipe/selfie_segmentation": "^0.1.1675465747",
+    "@tensorflow-models/body-segmentation": "^1.0.1",
+    "@tensorflow/tfjs-backend-webgl": "^4.3.0",
+    "@tensorflow/tfjs-core": "^4.3.0",
     "electron": "^23.1.4",
     "fs-jetpack": "^4.3.1"
   }

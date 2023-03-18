@@ -110,19 +110,19 @@ function createWindow() {
   let primaryDisplay = electron__WEBPACK_IMPORTED_MODULE_0__.screen.getPrimaryDisplay();
   console.log(electron__WEBPACK_IMPORTED_MODULE_0__.screen.getAllDisplays());
   win = new electron__WEBPACK_IMPORTED_MODULE_0__.BrowserWindow({
-    width: primaryDisplay.size.width,
-    height: primaryDisplay.size.width,
-    // width: 200,
-    // height:200,
+    // width: primaryDisplay.size.width,
+    // height: primaryDisplay.size.width,
+    width: 400,
+    height: 400,
     skipTaskbar: true,
     // transparent: true,
     // fullscreen: true,
     // show: false,
     // contentProtection: true,
-    alwaysOnTop: true,
-    frame: false,
+    // alwaysOnTop: true,
+    // frame: false,
     // opacity: 0.5,
-    focusable: false,
+    // focusable: false,
     acceptFirstMouse: true,
     webPreferences: {
       preload: path__WEBPACK_IMPORTED_MODULE_1___default().join(__dirname, 'preload.js')
@@ -139,14 +139,12 @@ function createWindow() {
   win.moveTop(); // win.setBackgroundColor('#aaa');
   // win.setFullScreen(true);
   // win.setKiosk(true);
+  // win.setIgnoreMouseEvents(true, { forward: false });
 
-  win.setIgnoreMouseEvents(true, {
-    forward: false
-  });
   win.setContentProtection(true); // var monitorWidth = screen.width;
   // var monitorHeight = screen.height;
-  // win.openDevTools();
 
+  win.openDevTools();
   electron__WEBPACK_IMPORTED_MODULE_0__.desktopCapturer.getSources({
     types: ['window', 'screen']
   }).then(async sources => {

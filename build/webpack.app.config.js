@@ -7,6 +7,7 @@ module.exports = env => {
     entry: {
       main: "./src/Electron/Main.js",
       preload: "./src/Electron/Preload.js",
+      mainview: "./src/Renderer/MainView.js",
 
       // mainwindow: "./src/Renderer/Main.js",
     },

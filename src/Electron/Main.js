@@ -9,19 +9,19 @@ function createWindow() {
   console.log(screen.getAllDisplays());
 
   win = new BrowserWindow({
-    width: primaryDisplay.size.width,
-    height: primaryDisplay.size.width,
-    // width: 200,
-    // height:200,
+    // width: primaryDisplay.size.width,
+    // height: primaryDisplay.size.width,
+    width: 400,
+    height:400,
     skipTaskbar: true,
     // transparent: true,
     // fullscreen: true,
     // show: false,
     // contentProtection: true,
-    alwaysOnTop: true,
-    frame: false,
+    // alwaysOnTop: true,
+    // frame: false,
     // opacity: 0.5,
-    focusable: false,
+    // focusable: false,
     acceptFirstMouse: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
@@ -39,14 +39,14 @@ function createWindow() {
   // win.setBackgroundColor('#aaa');
   // win.setFullScreen(true);
   // win.setKiosk(true);
-  win.setIgnoreMouseEvents(true, { forward: false });
+  // win.setIgnoreMouseEvents(true, { forward: false });
   win.setContentProtection(true);
 
   // var monitorWidth = screen.width;
   // var monitorHeight = screen.height;
 
 
-  // win.openDevTools();
+  win.openDevTools();
 
   desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
     for (const source of sources) {
