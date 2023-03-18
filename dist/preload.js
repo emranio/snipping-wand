@@ -110,11 +110,11 @@ electron__WEBPACK_IMPORTED_MODULE_0__.ipcRenderer.on('SET_SOURCE', async (event,
       video: {
         mandatory: {
           chromeMediaSource: 'desktop',
-          chromeMediaSourceId: sourceId,
-          minWidth: 1280,
-          maxWidth: 1280,
-          minHeight: 720,
-          maxHeight: 720
+          chromeMediaSourceId: sourceId // minWidth: 1280,
+          // maxWidth: 1280,
+          // minHeight: 720,
+          // maxHeight: 720
+
         }
       }
     });

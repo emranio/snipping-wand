@@ -21,10 +21,10 @@ ipcRenderer.on('SET_SOURCE', async (event, sourceId) => {
         mandatory: {
           chromeMediaSource: 'desktop',
           chromeMediaSourceId: sourceId,
-          minWidth: 1280,
-          maxWidth: 1280,
-          minHeight: 720,
-          maxHeight: 720
+          // minWidth: 1280,
+          // maxWidth: 1280,
+          // minHeight: 720,
+          // maxHeight: 720
         }
       }
     })
